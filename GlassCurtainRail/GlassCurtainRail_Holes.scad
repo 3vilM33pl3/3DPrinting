@@ -1,3 +1,5 @@
+delta = 0.005;
+
 main_w = 30; // depth of main block
 main_d = 61; // width of main block
 main_h = 18; // height of main block
@@ -5,6 +7,11 @@ main_h = 18; // height of main block
 cyl_h = 29; // cylinder cutout height
 cyl_r = 12; // cylinder cutout radius 
 cyl_fn = 254; // cylinder segments (more is smoother) 
+
+cyl_hole_h = 4.2; // cylinder hole cutout height
+cyl_hole_r_bottom = 3.2 / 2; // cylinder hole cutout radius 
+cyl_hole_r_top = 6 / 2; // cylinder cutout radius 
+cyl__hole_fn = 254; // cylinder segments (more is smoother) 
 
 cyl_loc_x = 15; // x location cutout cylinder
 cyl_loc_y = 15.5; // y location cutout cylinder 
@@ -17,8 +24,9 @@ cutout_h = 20;
 
 depth_cutout = 11;
 
-//  3.8
-// 4
+
+
+
 
 difference() {
     difference() {
@@ -26,14 +34,25 @@ difference() {
             difference() {
                 difference() {
                     cube([main_w,main_d,main_h], false);
-                    color("aqua")
-                    translate([cyl_loc_x, main_d - cyl_loc_y, floor_h])
-                    cylinder(cyl_h, cyl_r, cyl_r, $fn=cyl_fn);
+                    union() {
+                        color("aqua")
+                        translate([cyl_loc_x, main_d - cyl_loc_y, floor_h])
+                        cylinder(cyl_h, cyl_r, cyl_r, $fn=cyl_fn);
+                        
+                        color("aqua")
+                        translate([cyl_loc_x, cyl_loc_y, floor_h])
+                        cylinder(cyl_h, cyl_r, cyl_r, $fn=cyl_fn);    
+                    }
                 };
+                
+                union() {
+                    translate([cyl_loc_x, cyl_loc_y, -0.1])
+                    cylinder(cyl_hole_h, cyl_hole_r_bottom, cyl_hole_r_top, $fn=cyl_fn);
 
-                color("aqua")
-                translate([cyl_loc_x, cyl_loc_y, floor_h])
-                cylinder(cyl_h, cyl_r, cyl_r, $fn=cyl_fn);
+                    translate([cyl_loc_x, main_d - cyl_loc_y, -0.1])
+                    cylinder(cyl_hole_h, cyl_hole_r_bottom, cyl_hole_r_top, $fn=cyl_fn);
+                }
+                
             };
 
             color("aqua")
